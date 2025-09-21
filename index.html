@@ -30,7 +30,7 @@
       outline: none;
       transition: border 0.2s, box-shadow 0.2s;
       position: absolute;
-      /*border: none; */
+      border: none;
     }
     input.score {
       width: 131px;
@@ -40,10 +40,17 @@
       text-align: center;
     }
     input.flag {
-      width: 40px;
+      width: 131px;
+      height: 50px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
     }
     input.achievement {
-      width: 40px;
+      width: 45px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
     }
     input.score:focus, input.flag:focus, input.achievement:focus {
       border: 2px solid #4e7c2c;
@@ -133,28 +140,28 @@
     <div class="main"> <div class="sheet">
     <!-- Example inputs (positions need adjusting to match background image) -->
     <input type="number" class="score" data-section="tree" style="top:13.9%; left:16.7%;">
-    <input type="number" class="score" data-section="field" style="top:15%; left:33%;">
-    <input type="number" class="score" data-section="house" style="top:15%; left:47%;">
-    <input type="number" class="score" data-section="rail" style="top:15%; left:62%;">
-    <input type="number" class="score" data-section="water" style="top:15%; left:75%;">
+    <input type="number" class="score" data-section="field" style="top:13.9%; left:30.3%;">
+    <input type="number" class="score" data-section="house" style="top:13.9%; left:44%;">
+    <input type="number" class="score" data-section="rail" style="top:13.9%; left:58%;">
+    <input type="number" class="score" data-section="water" style="top:13.9%; left:72%;">
 
-    <input type="number" class="flag" data-section="tree" style="top:26%; left:20%;">
-    <input type="number" class="flag" data-section="field" style="top:26%; left:33%;">
-    <input type="number" class="flag" data-section="house" style="top:26%; left:47%;">
-    <input type="number" class="flag" data-section="rail" style="top:26%; left:62%;">
-    <input type="number" class="flag" data-section="water" style="top:26%; left:75%;">
+    <input type="number" class="flag" data-section="tree" style="top:22.5%; left:16.7%;">
+    <input type="number" class="flag" data-section="field" style="top:22.5%; left:30.3%;">
+    <input type="number" class="flag" data-section="house" style="top:22.5%; left:44%;">
+    <input type="number" class="flag" data-section="rail" style="top:22.5%; left:58%;">
+    <input type="number" class="flag" data-section="water" style="top:22.5%; left:72%;">
 
-    <input type="number" class="achievement" data-section="redHeart" style="top:42%; left:38%;">
+    <input type="number" class="achievement" data-section="redHeart" style="top:40%; left:38%;">
     <input type="checkbox" class="achievement checkbox-style" data-section="circus" data-points="10" style="top:47%; left:38%;">
-    <input type="number" class="achievement" data-section="trainCrossing" style="top:52%; left:38%;">
-    <input type="number" class="achievement" data-section="sheep" style="top:57%; left:38%;">
+    <input type="number" class="achievement" data-section="trainCrossing" style="top:50.5%; left:38%;">
+    <input type="number" class="achievement" data-section="sheep" style="top:56%; left:38%;">
     <input type="number" class="achievement" data-section="hill" style="top:62%; left:38%;">
     <input type="number" class="achievement" data-section="construction" style="top:66.5%; left:38%;">
     <input type="number" class="achievement" data-section="balloon" style="top:71.2%; left:38%;">
     <input type="number" class="achievement" data-section="goldenHeart" style="top:76%; left:38%;">
-    <input type="number" class="achievement" data-section="doubleTree" style="top:42%; left:80%;">
-    <input type="number" class="achievement" data-section="doubleWheat" style="top:47%; left:80%;">
-    <input type="number" class="achievement" data-section="doubleHouse" style="top:52%; left:80%;">
+    <input type="number" class="achievement" data-section="doubleTree" style="top:40%; left:80%;">
+    <input type="number" class="achievement" data-section="doubleWheat" style="top:45.5%; left:80%;">
+    <input type="number" class="achievement" data-section="doubleHouse" style="top:50.5%; left:80%;">
     <input type="number" class="achievement" data-section="doubleTrain" style="top:57%; left:80%;">
     <input type="number" class="achievement" data-section="doubleRiver" style="top:62.2%; left:80%;">
     <input type="number" class="achievement" data-section="trainStation" style="top:66.8%; left:80%;">
