@@ -30,7 +30,7 @@
       outline: none;
       transition: border 0.2s, box-shadow 0.2s;
       position: absolute;
-      /*border: none;*/
+      border: none; /* Added to remove border from inputs - helps with visualizing when building*/
     }
     input.score {
       width: 131px;
@@ -72,21 +72,32 @@
     }
     #totalMission, #totalFlag, #totalAchievement {
       position: absolute;
-      font-size: 24px;
+      font-size: 34px;
       font-weight: bold;
-      color: #000;
-      background: rgba(255,255,255,0.9);
+      color: #ffffff;
+      background: rgba(255,255,255,0);
       padding: 5px 15px;
       border-radius: 8px;
     }
     #total {
       position: absolute;
       bottom: 40px;
-      right: 40px;
-      font-size: 28px;
+      right: 50px;
+      font-size: 34px;
       font-weight: bold;
-      color: #000;
-      background: rgba(255,255,255,0.9);
+      color: #ffffff;
+      background: rgba(255,255,255,0);
+      padding: 5px 15px;
+      border-radius: 8px;
+    }
+    #crosses {
+      position: absolute;
+      bottom: 15px;
+      right: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffffff;
+      background: rgba(255,255,255,0);
       padding: 5px 15px;
       border-radius: 8px;
     }
@@ -100,10 +111,9 @@
       cursor: pointer;
     }
     .controls {
-      position: static;
       display: flex;
-      justify-content: center;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
       background: rgba(255,255,255,0.92);
       border-radius: 12px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.10);
@@ -111,6 +121,11 @@
       margin: 24px auto 0 auto;
       max-width: 900px;
       z-index: 2;
+    }
+    .controls-left, .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     .controls select, .controls button {
       font-size: 16px;
@@ -186,11 +201,11 @@
     <input type="number" class="score" data-section="rail" style="top:13.9%; left:58%;">
     <input type="number" class="score" data-section="water" style="top:13.9%; left:72%;">
 
-    <input type="number" class="flag" data-section="tree" style="top:22.5%; left:16.7%;">
-    <input type="number" class="flag" data-section="field" style="top:22.5%; left:30.3%;">
-    <input type="number" class="flag" data-section="house" style="top:22.5%; left:44%;">
-    <input type="number" class="flag" data-section="rail" style="top:22.5%; left:58%;">
-    <input type="number" class="flag" data-section="water" style="top:22.5%; left:72%;">
+    <input type="number" class="flag" data-section="treeFlag" style="top:22.5%; left:16.7%;">
+    <input type="number" class="flag" data-section="fieldFlag" style="top:22.5%; left:30.3%;">
+    <input type="number" class="flag" data-section="houseFlag" style="top:22.5%; left:44%;">
+    <input type="number" class="flag" data-section="railFlag" style="top:22.5%; left:58%;">
+    <input type="number" class="flag" data-section="waterFlag" style="top:22.5%; left:72%;">
 
     <input type="number" class="achievement" data-section="redHeart" style="top:40.5%; left:38.5%;">
     <input type="checkbox" class="achievement checkbox-style" data-section="circus" data-points="10" style="top:47%; left:39.5%;">
@@ -212,17 +227,23 @@
     <div id="totalFlag" style="position: absolute; top:24%; left:90%;">0</div>
     <div id="totalAchievement" style="position: absolute; top:50%; left:90%;">0</div>
     <!-- Total -->
-    <div id="total">0</div>
-
+    <div id="totalMissionLabel" style="position: absolute; top:99%; left:83%; font-size: 18px; color: #fff; font-weight: bold; border: #2e3e1f; width: 177px; text-align: center;">
+      <div id="total">0</div>
+      <div id="crosses">(0 X)</div>
+    </div>
     </div> <!-- end .sheet -->
 
     <div class="controls">
-      <select id="gameSelector" style="margin-right:10px;"></select>
-      <button onclick="newGame()">➕ New Game</button>
-      <button onclick="saveGame()">💾 Save Score</button>
-      <button onclick="loadGames()">📂 Show All Scores</button>
-      <button onclick="clearScores()">🗑 Clear</button>
-    </div>
+  <div class="controls-left">
+    <select id="gameSelector" style="margin-right:10px;"></select>
+    <button onclick="newGame()">➕ New Game</button>
+    <button onclick="deleteCurrentGame()">🗑 Delete Game</button>
+  </div>
+  <div class="controls-right">
+    <button onclick="saveGame();clearScores()">💾 Save Score</button>
+    <button onclick="clearScores()">🗑 Clear </button>
+  </div>
+</div>
 
     <div class="playedGames" id="playedGames">
         <!-- Saved games will appear here -->
@@ -247,7 +268,7 @@ function updateCurrentGameLabel() {
   const current = getCurrentGame();
   const label = document.getElementById("currentGameLabel");
   if (!label || !current) return;
-  const scores = (meta[current] || []).length;
+  const scores = (meta[current] || []).length + 1;
   label.innerText = `#${scores}`;
 }
 function ensureGameSelected() {
@@ -308,14 +329,100 @@ function renderPlayedGames() {
     container.innerHTML = "<em>No saved scores for this game.</em>";
     return;
   }
-  let html = `<table><thead><tr><th>#</th><th>Date</th><th>Total</th><th>Delete</th></tr></thead><tbody>${games.map((g,i)=>`
-    <tr>
-      <td style="text-align:center;">${i+1}</td>
-      <td>${g.date}</td>
-      <td style="text-align:center;font-weight:bold;">${g.total}</td>
-      <td style="text-align:center;"><button onclick="deleteGame(${i})">✗</button></td>
-    </tr>
-  `).join("")}</tbody></table>`;
+
+  // Helper to pretty print section names (user can extend)
+  function prettyName(key) {
+    // Example mapping, extend as needed
+    const map = {
+      tree: "Forest",
+      field: "Field",
+      house: "House",
+      rail: "Rail",
+      water: "Water",
+      treeFlag: "Forest Flag",
+      fieldFlag: "Field Flag",
+      houseFlag: "House Flag",
+      railFlag: "Longest Train",
+      waterFlag: "Longest River",
+      redHeart: "Red Heart",
+      circus: "Circus",
+      trainCrossing: "Train Crossing",
+      sheep: "Sheep",
+      hill: "Hill",
+      construction: "Construction",
+      balloon: "Balloon",
+      goldenHeart: "Golden Heart",
+      doubleTree: "Double Tree",
+      doubleWheat: "Double Wheat",
+      doubleHouse: "Double House",
+      doubleTrain: "Double Train",
+      doubleRiver: "Double River",
+      trainStation: "Train Station",
+      harbor: "Harbor"
+    };
+    return map[key] || key;
+  }
+
+  // Section keys
+  const missionKeys = ["tree", "field", "house", "rail", "water"];
+  const flagKeys = ["treeFlag", "fieldFlag", "houseFlag", "railFlag", "waterFlag"];
+  const achievementKeys = [
+    "redHeart", "circus", "trainCrossing", "sheep", "hill", "construction", "balloon", "goldenHeart",
+    "doubleTree", "doubleWheat", "doubleHouse", "doubleTrain", "doubleRiver", "trainStation", "harbor"
+  ];
+
+  function renderDetails(g) {
+    function section(keys, label) {
+      let rows = keys.map(k => {
+        if (g[k] === undefined || g[k] === "" || g[k] === false) return "";
+        let val = (typeof g[k] === "boolean") ? (g[k] ? "✓" : "") : g[k];
+        return `<tr><td>${prettyName(k)}</td><td style="text-align:right;">${val}</td></tr>`;
+      }).join("");
+      if (!rows) return "";
+      return `<tr><th colspan="2" style="text-align:left;padding-top:8px;">${label}</th></tr>${rows}`;
+    }
+    return `
+      <table style="width:100%;font-size:15px;margin-top:8px;">
+        <tbody>
+          ${section(missionKeys, "Missions")}
+          ${section(flagKeys, "Flags")}
+          ${section(achievementKeys, "Achievements")}
+        </tbody>
+      </table>
+    `;
+  }
+
+  let html = `<table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Date</th>
+        <th>Total</th>
+        <th>Details</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${games.map((g,i)=>`
+        <tr>
+          <td style="text-align:center;">${i+1}</td>
+          <td>${g.date}</td>
+          <td style="text-align:center;font-weight:bold;">${g.total}</td>
+          <td style="text-align:center;">
+            <button onclick="toggleDetails(this)">▼</button>
+          </td>
+          <td style="text-align:center;">
+            <button onclick="deleteGame(${i})">✗</button>
+          </td>
+        </tr>
+        <tr class="details-row" style="display:none;">
+          <td colspan="5">${renderDetails(g)}</td>
+        </tr>
+      `).join("")}
+    </tbody>
+  </table>
+  `;
+
   container.innerHTML = html;
 }
 function deleteGame(index) {
@@ -324,6 +431,25 @@ function deleteGame(index) {
   meta[current].splice(index, 1);
   setGamesMeta(meta);
   renderPlayedGames();
+}
+function deleteCurrentGame() {
+  const current = getCurrentGame();
+  if (!current) return;
+  if (!confirm(`Delete game "${current}" and all its scores? This cannot be undone.`)) return;
+  let meta = getGamesMeta();
+  delete meta[current];
+  setGamesMeta(meta);
+  // Pick another game if any left, else clear
+  const names = Object.keys(meta);
+  if (names.length > 0) {
+    setCurrentGame(names[0]);
+  } else {
+    localStorage.removeItem("dorfromantik_current_game");
+  }
+  renderGameSelector();
+  clearScores();
+  renderPlayedGames();
+  updateCurrentGameLabel();
 }
 
 // --- Input/Score Logic ---
@@ -343,6 +469,51 @@ function updateTotal() {
     }
   });
   document.getElementById("total").innerText = sum;
+  console.log(achievementCrosses(sum))
+  updateCrosses(achievementCrosses(sum));
+}
+function achievementCrosses(points) {
+ const mapping = {
+   0: 1,
+   100: 2,
+   110: 3,
+   120: 3,
+   130: 4,
+   140: 4,
+   150: 5,
+   160: 5,
+   170: 6,
+   180: 6,
+   190: 7,
+   200: 7,
+   210: 8,
+   220: 8,
+   230: 9,
+   240: 9,
+   250: 10,
+   260: 10,
+   270: 11,
+   280: 11,
+   290: 12,
+   300: 12,
+   310: 13,
+   320: 13,
+   330: 14,
+   340: 14,
+   350: 15,
+   375: 15,
+   400: 15
+ };
+
+ let lvlPoints = Math.floor(points / 10) * 10;
+
+ if (lvlPoints > 400) {lvlPoints = 400;}
+
+ return mapping[lvlPoints] || 1;
+
+}
+function updateCrosses(crosses) {
+  document.getElementById("crosses").innerText = `(${crosses} X)`;
 }
 function updateTotalMission() {
   let sum = 0;
@@ -421,6 +592,17 @@ window.addEventListener("DOMContentLoaded", function() {
   renderPlayedGames();
   updateCurrentGameLabel();
 });
+function toggleDetails(btn) {
+  var tr = btn.closest('tr');
+  var details = tr.nextElementSibling;
+  if (details.style.display === "none") {
+    details.style.display = "";
+    btn.innerText = "▲";
+  } else {
+    details.style.display = "none";
+    btn.innerText = "▼";
+  }
+}
 </script>
 </body>
 </html>
