@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Dorfromantik Punkte-Rechner</title>
+  <title>Dorfromantik Scoresheet</title>
   <style>
     body {
       margin: 0;
@@ -30,7 +30,7 @@
       outline: none;
       transition: border 0.2s, box-shadow 0.2s;
       position: absolute;
-      border: none;
+      /*border: none;*/
     }
     input.score {
       width: 131px;
@@ -48,6 +48,7 @@
     }
     input.achievement {
       width: 45px;
+      height: 25px;
       font-weight: bold;
       color: #fff;
       text-align: center;
@@ -99,45 +100,85 @@
       cursor: pointer;
     }
     .controls {
-      position: absolute;
-      bottom: -5%;
-      left: 50%;
-      transform: translateX(-50%);
+      position: static;
       display: flex;
-      gap: 10px;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      padding: 12px 24px;
+      margin: 24px auto 0 auto;
+      max-width: 900px;
+      z-index: 2;
     }
+    .controls select, .controls button {
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1.5px solid #8bb174;
+      background: #f7faf5;
+      color: #2e3e1f;
+      padding: 7px 16px;
+      margin: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: background 0.2s, border 0.2s;
+    }
+    .controls button:hover, .controls select:focus {
+      background: #eaf5e1;
+      border-color: #4e7c2c;
+    }
+
     /* Played games table styling */
     .playedGames {
-      margin-top: 30px;
+      margin-top: 40px;
       display: flex;
       justify-content: center;
     }
     .playedGames table {
-      background:rgba(255,255,255,0.98);
-      border-radius:10px;
-      box-shadow:0 2px 12px rgba(0,0,0,0.08);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
       width: 90vw;
       max-width: 900px;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       margin: 0 auto;
+      overflow: hidden;
     }
     .playedGames th, .playedGames td {
-      padding: 10px 16px;
+      padding: 14px 20px;
       border-bottom: 1px solid #e0e0e0;
-      font-size: 17px;
+      font-size: 18px;
     }
     .playedGames th {
       background: #eaf5e1;
       color: #2e3e1f;
       font-weight: 700;
+      border-bottom: 2px solid #b6e3a1;
     }
     .playedGames tr:last-child td {
       border-bottom: none;
+    }
+    .playedGames button {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .playedGames button:hover {
+      background: #c0392b;
     }
   </style>
 </head>
 <body>
     <div class="main"> <div class="sheet">
+    <div id="currentGameLabel" style="position: absolute; top: 5.5%; left: 5.2%; background: rgba(255,255,255,0); padding: 6px 18px; border-radius: 10px; font-size: 22px; font-weight: bold; color: #2e3e1f; z-index: 10;">
+    <span id="currentGameName"></span>
+    </div>
     <!-- Example inputs (positions need adjusting to match background image) -->
     <input type="number" class="score" data-section="tree" style="top:13.9%; left:16.7%;">
     <input type="number" class="score" data-section="field" style="top:13.9%; left:30.3%;">
@@ -151,21 +192,21 @@
     <input type="number" class="flag" data-section="rail" style="top:22.5%; left:58%;">
     <input type="number" class="flag" data-section="water" style="top:22.5%; left:72%;">
 
-    <input type="number" class="achievement" data-section="redHeart" style="top:40%; left:38%;">
-    <input type="checkbox" class="achievement checkbox-style" data-section="circus" data-points="10" style="top:47%; left:38%;">
-    <input type="number" class="achievement" data-section="trainCrossing" style="top:50.5%; left:38%;">
-    <input type="number" class="achievement" data-section="sheep" style="top:56%; left:38%;">
-    <input type="number" class="achievement" data-section="hill" style="top:62%; left:38%;">
-    <input type="number" class="achievement" data-section="construction" style="top:66.5%; left:38%;">
-    <input type="number" class="achievement" data-section="balloon" style="top:71.2%; left:38%;">
-    <input type="number" class="achievement" data-section="goldenHeart" style="top:76%; left:38%;">
+    <input type="number" class="achievement" data-section="redHeart" style="top:40.5%; left:38.5%;">
+    <input type="checkbox" class="achievement checkbox-style" data-section="circus" data-points="10" style="top:47%; left:39.5%;">
+    <input type="number" class="achievement" data-section="trainCrossing" style="top:50.5%; left:38.5%;">
+    <input type="number" class="achievement" data-section="sheep" style="top:56%; left:38.5%;">
+    <input type="number" class="achievement" data-section="hill" style="top:60.5%; left:38.5%;">
+    <input type="number" class="achievement" data-section="construction" style="top:65.5%; left:38.5%;">
+    <input type="number" class="achievement" data-section="balloon" style="top:70.2%; left:38.5%;">
+    <input type="number" class="achievement" data-section="goldenHeart" style="top:75%; left:38.5%;">
     <input type="number" class="achievement" data-section="doubleTree" style="top:40%; left:80%;">
     <input type="number" class="achievement" data-section="doubleWheat" style="top:45.5%; left:80%;">
     <input type="number" class="achievement" data-section="doubleHouse" style="top:50.5%; left:80%;">
-    <input type="number" class="achievement" data-section="doubleTrain" style="top:57%; left:80%;">
-    <input type="number" class="achievement" data-section="doubleRiver" style="top:62.2%; left:80%;">
-    <input type="number" class="achievement" data-section="trainStation" style="top:66.8%; left:80%;">
-    <input type="number" class="achievement" data-section="harbor" style="top:71.2%; left:80%;">
+    <input type="number" class="achievement" data-section="doubleTrain" style="top:55.5%; left:80%;">
+    <input type="number" class="achievement" data-section="doubleRiver" style="top:61%; left:80%;">
+    <input type="number" class="achievement" data-section="trainStation" style="top:65.8%; left:80%;">
+    <input type="number" class="achievement" data-section="harbor" style="top:70.2%; left:80%;">
 
     <div id="totalMission" style="position: absolute; top:15%; left:90%;">0</div>
     <div id="totalFlag" style="position: absolute; top:24%; left:90%;">0</div>
@@ -173,71 +214,126 @@
     <!-- Total -->
     <div id="total">0</div>
 
-    <div class="controls">
-      <button onclick="saveGame()">💾 Spiel speichern</button>
-      <button onclick="loadGames()">📂 Spiele laden</button>
-      <button onclick="clearScores()">🗑 Löschen</button>
-    </div>
-  </div>
+    </div> <!-- end .sheet -->
 
-  <!-- Move playedGames table below the image -->
-  <div class="playedGames" id="playedGames">
-      <!-- Saved games will appear here -->
-  </div> </div>
+    <div class="controls">
+      <select id="gameSelector" style="margin-right:10px;"></select>
+      <button onclick="newGame()">➕ New Game</button>
+      <button onclick="saveGame()">💾 Save Score</button>
+      <button onclick="loadGames()">📂 Show All Scores</button>
+      <button onclick="clearScores()">🗑 Clear</button>
+    </div>
+
+    <div class="playedGames" id="playedGames">
+        <!-- Saved games will appear here -->
+    </div> </div>
   
   <script>
-    function renderPlayedGames() {
-      const games = JSON.parse(localStorage.getItem("dorfromantik_games") || "[]");
-      const container = document.getElementById("playedGames");
-      if (!container) return;
-      if (games.length === 0) {
-        container.innerHTML = "<em>Keine gespeicherten Spiele.</em>";
-        return;
-      }
-      let html = `<table style="background:rgba(255,255,255,0.95);border-radius:8px;width:100%;margin-top:10px;">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Datum</th>
-            <th>Punkte</th>
-            <th>Löschen</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${games.map((g,i)=>`
-            <tr>
-              <td style="text-align:center;">${i+1}</td>
-              <td>${g.date}</td>
-              <td style="text-align:center;font-weight:bold;">${g.total}</td>
-              <td style="text-align:center;"><button onclick="deleteGame(${i})" style="color:#fff;background:#c0392b;border:none;border-radius:4px;padding:2px 8px;cursor:pointer;font-size:16px;">✗</button></td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>`;
-      container.innerHTML = html;
+// --- Game Management ---
+function getGamesMeta() {
+  return JSON.parse(localStorage.getItem("dorfromantik_games_meta") || "{}");
+}
+function setGamesMeta(meta) {
+  localStorage.setItem("dorfromantik_games_meta", JSON.stringify(meta));
+}
+function getCurrentGame() {
+  return localStorage.getItem("dorfromantik_current_game") || null;
+}
+function setCurrentGame(name) {
+  localStorage.setItem("dorfromantik_current_game", name);
+}
+function updateCurrentGameLabel() {
+  const meta = getGamesMeta();
+  const current = getCurrentGame();
+  const label = document.getElementById("currentGameLabel");
+  if (!label || !current) return;
+  const scores = (meta[current] || []).length;
+  label.innerText = `#${scores}`;
+}
+function ensureGameSelected() {
+  let current = getCurrentGame();
+  let meta = getGamesMeta();
+  if (!current || !meta[current]) {
+    let name = prompt("Please enter a name for the new game:");
+    if (name) {
+      meta[name] = [];
+      setGamesMeta(meta);
+      setCurrentGame(name);
+      renderGameSelector();
+      updateCurrentGameLabel();
     }
+  } else {
+    updateCurrentGameLabel();
+  }
+}
+function newGame() {
+  let name = prompt("New Game: Enter a name:");
+  if (!name) return;
+  let meta = getGamesMeta();
+  if (meta[name]) {
+    alert("A game with this name already exists.");
+    return;
+  }
+  meta[name] = [];
+  setGamesMeta(meta);
+  setCurrentGame(name);
+  renderGameSelector();
+  clearScores();
+  renderPlayedGames();
+  updateCurrentGameLabel();
+}
+function renderGameSelector() {
+  let meta = getGamesMeta();
+  let current = getCurrentGame();
+  let sel = document.getElementById("gameSelector");
+  sel.innerHTML = Object.keys(meta).map(name => `<option value="${name}"${name===current?' selected':''}>${name}</option>`).join("");
+  sel.onchange = function() {
+    setCurrentGame(sel.value);
+    clearScores();
+    renderPlayedGames();
+    updateCurrentGameLabel();
+  };
+  // Always update label and table after rendering selector
+  updateCurrentGameLabel();
+  renderPlayedGames();
+}
+function renderPlayedGames() {
+  ensureGameSelected();
+  let current = getCurrentGame();
+  let meta = getGamesMeta();
+  let games = (meta[current] || []);
+  const container = document.getElementById("playedGames");
+  if (!container) return;
+  if (games.length === 0) {
+    container.innerHTML = "<em>No saved scores for this game.</em>";
+    return;
+  }
+  let html = `<table><thead><tr><th>#</th><th>Date</th><th>Total</th><th>Delete</th></tr></thead><tbody>${games.map((g,i)=>`
+    <tr>
+      <td style="text-align:center;">${i+1}</td>
+      <td>${g.date}</td>
+      <td style="text-align:center;font-weight:bold;">${g.total}</td>
+      <td style="text-align:center;"><button onclick="deleteGame(${i})">✗</button></td>
+    </tr>
+  `).join("")}</tbody></table>`;
+  container.innerHTML = html;
+}
+function deleteGame(index) {
+  let current = getCurrentGame();
+  let meta = getGamesMeta();
+  meta[current].splice(index, 1);
+  setGamesMeta(meta);
+  renderPlayedGames();
+}
 
-    function deleteGame(index) {
-      let games = JSON.parse(localStorage.getItem("dorfromantik_games") || "[]");
-      games.splice(index, 1);
-      localStorage.setItem("dorfromantik_games", JSON.stringify(games));
-      renderPlayedGames();
-    }
-
-    // Render on page load
-    window.addEventListener("DOMContentLoaded", renderPlayedGames);
-  </script>
-
-  <script>
-    const allInput = document.querySelectorAll("input");
-    const inputs = document.querySelectorAll(".score");
-
-    inputs.forEach(inp => inp.addEventListener("input", updateTotal));
-    inputs.forEach(inp => inp.addEventListener("input", updateTotalMission));
-
-    function updateTotal() {
-      let sum = 0;
-      allInput.forEach(inp => {
+// --- Input/Score Logic ---
+const allInput = document.querySelectorAll("input");
+const inputs = document.querySelectorAll(".score");
+inputs.forEach(inp => inp.addEventListener("input", updateTotal));
+inputs.forEach(inp => inp.addEventListener("input", updateTotalMission));
+function updateTotal() {
+  let sum = 0;
+  allInput.forEach(inp => {
     if (inp.type === "checkbox") {
       if (inp.checked) {
         sum += Number(inp.dataset.points) || 0;
@@ -246,31 +342,27 @@
       sum += Number(inp.value) || 0;
     }
   });
-      document.getElementById("total").innerText = sum;
-    }
-
-    function updateTotalMission() {
-      let sum = 0;
-      inputs.forEach(inp => sum += Number(inp.value) || 0);
-      document.getElementById("totalMission").innerText = sum;
-    }
-
-    const flagInputs = document.querySelectorAll(".flag");
-    flagInputs.forEach(inp => inp.addEventListener("input", updateTotalFlag));
-    flagInputs.forEach(inp => inp.addEventListener("input", updateTotal));
-
-    function updateTotalFlag() {
-      let sum = 0;
-      flagInputs.forEach(inp => sum += Number(inp.value) || 0);
-      document.getElementById("totalFlag").innerText = sum;
-    }
-
-    const achievementInputs = document.querySelectorAll(".achievement");
-    achievementInputs.forEach(inp => inp.addEventListener("input", updateTotalAchievement));
-    achievementInputs.forEach(inp => inp.addEventListener("input", updateTotal));
-    function updateTotalAchievement() {
-      let sum = 0;
-      achievementInputs.forEach(inp => {
+  document.getElementById("total").innerText = sum;
+}
+function updateTotalMission() {
+  let sum = 0;
+  inputs.forEach(inp => sum += Number(inp.value) || 0);
+  document.getElementById("totalMission").innerText = sum;
+}
+const flagInputs = document.querySelectorAll(".flag");
+flagInputs.forEach(inp => inp.addEventListener("input", updateTotalFlag));
+flagInputs.forEach(inp => inp.addEventListener("input", updateTotal));
+function updateTotalFlag() {
+  let sum = 0;
+  flagInputs.forEach(inp => sum += Number(inp.value) || 0);
+  document.getElementById("totalFlag").innerText = sum;
+}
+const achievementInputs = document.querySelectorAll(".achievement");
+achievementInputs.forEach(inp => inp.addEventListener("input", updateTotalAchievement));
+achievementInputs.forEach(inp => inp.addEventListener("input", updateTotal));
+function updateTotalAchievement() {
+  let sum = 0;
+  achievementInputs.forEach(inp => {
     if (inp.type === "checkbox") {
       if (inp.checked) {
         sum += Number(inp.dataset.points) || 0;
@@ -279,51 +371,56 @@
       sum += Number(inp.value) || 0;
     }
   });
-      document.getElementById("totalAchievement").innerText = sum;
+  document.getElementById("totalAchievement").innerText = sum;
+}
+function saveGame() {
+  ensureGameSelected();
+  let current = getCurrentGame();
+  if (!current) return;
+  let meta = getGamesMeta();
+  const data = {};
+  document.querySelectorAll("input").forEach(inp => {
+    if (inp.type === "checkbox") {
+      data[inp.dataset.section] = inp.checked;
+    } else {
+      data[inp.dataset.section] = inp.value;
     }
-
-    function saveGame() {
-      const data = {};
-      inputs.forEach(inp => data[inp.dataset.section] = inp.value);
-      data.total = document.getElementById("total").innerText;
-      data.date = new Date().toLocaleString();
-
-      let games = JSON.parse(localStorage.getItem("dorfromantik_games") || "[]");
-      games.push(data);
-      localStorage.setItem("dorfromantik_games", JSON.stringify(games));
-      alert("Spiel gespeichert!");
+  });
+  data.total = document.getElementById("total").innerText;
+  data.date = new Date().toLocaleString();
+  meta[current].push(data);
+  setGamesMeta(meta);
+  alert("Game saved!");
+  renderPlayedGames();
+}
+function loadGames() {
+  const games = JSON.parse(localStorage.getItem("dorfromantik_games") || "[]");
+  if (games.length === 0) {
+    alert("No saved games found.");
+    return;
+  }
+  let msg = games.map((g,i)=>`${i+1}. ${g.date} = ${g.total} Punkte`).join("\n");
+  alert("Saved games:\n"+msg);
+}
+function clearScores() {
+  allInput.forEach(inp => {
+    if (inp.type === "checkbox") {
+      inp.checked = false;
+    } else {
+      inp.value = "";
     }
-
-    function loadGames() {
-      const games = JSON.parse(localStorage.getItem("dorfromantik_games") || "[]");
-      if (games.length === 0) {
-        alert("Keine gespeicherten Spiele gefunden.");
-        return;
-      }
-      let msg = games.map((g,i)=>`${i+1}. ${g.date} = ${g.total} Punkte`).join("\n");
-      alert("Gespeicherte Spiele:\n"+msg);
-    }
-
-    function clearScores() {
-      allInput.forEach(inp => {
-        if (inp.type === "checkbox") {
-          inp.checked = false;
-        } else {
-          inp.value = "";
-        }
-      });
-      updateTotal();
-      updateTotalMission();
-      updateTotalFlag();
-      updateTotalAchievement();
-    }
-
-    // Update table after saving a game
-    const origSaveGame = saveGame;
-    window.saveGame = function() {
-      origSaveGame();
-      renderPlayedGames();
-    };
-  </script>
+  });
+  updateTotal();
+  updateTotalMission();
+  updateTotalFlag();
+  updateTotalAchievement();
+}
+window.addEventListener("DOMContentLoaded", function() {
+  ensureGameSelected();
+  renderGameSelector();
+  renderPlayedGames();
+  updateCurrentGameLabel();
+});
+</script>
 </body>
 </html>
